@@ -4,14 +4,14 @@ This project implements a custom **4-bit Soft-Core CPU** on the Vicharak **Shrik
 
 Originally designed by **Noah Gaertner** for SystemVerilog simulation, this core has been ported to the **Renesas SLG47910 FPGA** to work as a hardware accelerator for the RP2040.
 
-Instead of using physical buttons and LEDs, this CPU is controlled entirely via **SPI**. The RP2040 acts as the "Front Panel," sending instructions, loading memory, and single-stepping the clock.
+Instead of using physical buttons and LEDs, this CPU is controlled entirely via **SPI**. The RP2040 acts as the master, sending instructions, loading memory, and single-stepping the clock.
 
 ---
 
 ## System Architecture
 
 The system is a hybrid design:
-* **RP2040 (Master):** Handles the high-level logic, user interface (USB/WiFi), and controls the CPU execution.
+* **RP2040 (Master):** Handles the high-level logic, user interface, and controls the CPU execution.
 * **FPGA (Slave):** Contains the CPU core, memory (RAM/ROM), and ALU.
 
 ### Specifications
