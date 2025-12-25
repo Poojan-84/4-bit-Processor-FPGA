@@ -1,32 +1,41 @@
 module cpu_core (
-    input  wire       clk,
-    input  wire       rst_n,      // Active low reset
+    input  wire       clk,    // FPGA CLK input
+    input  wire       rst_n,    // Active low reset
     input  wire       i_step,     // "Clock" enable (Execute one cycle)
     
     // Inputs from "io_in"
-    input  wire [1:0] instruction,
-    input  wire [3:0] data_in,
-    input  wire       data_in_3_latched, // From top module logic
+    input  wire [1:0] instruction,  //CPU Mode select
+    /*
+    00 = LOADPROG (Write to Program Memory)
+
+    01 = LOADDATA (Write to Data Memory)
+
+    10 = SETRUNPT (Set PC manually)
+
+    11 = RUNPROG (Actually execute the code in memory)
+    */
+    input  wire [3:0] data_in,   // 4-bit input from the RP2040 - can be opcode or data itself
+    input  wire       data_in_3_latched, // From top module logic - the state of input pin from the previous cycle
 
     // Outputs to "io_out"
-    output reg  [3:0] pc,
-    output reg  [3:0] regval
+    output reg  [3:0] pc,    //program counter - shows current program line being executed
+    output reg  [3:0] regval   //result value - the value of the answer after operations
 );
 
-    // Memory Arrays (16 x 4-bit)
-    reg [3:0] prog [0:15];
-    reg [3:0] data [0:15];
+    // Memory Arrays (16 x 4-bit) - 16 slot memory with each slot being 4 bit wide
+    reg [3:0] prog [0:15];    //Stores the instructions/code
+    reg [3:0] data [0:15];    //Stores the variables
     
     // Internal Signals
-    wire [3:0] progc;
-    wire [3:0] datac;
-    wire [3:0] npc;
+    wire [3:0] progc;   // Current Prog
+    wire [3:0] datac;   // Current variable/operation
+    wire [3:0] npc;     // Next Program Counter (pc+1)
     
     assign progc = prog[pc];
     assign datac = data[pc];
     assign npc   = pc + 1;
 
-    // ISA Definitions (Converted to localparam)
+    // ISA Definitions
     localparam LOAD = 4'd0, STORE = 4'd1, ADD = 4'd2, MUL = 4'd3, SUB = 4'd4;
     localparam SHIFTL = 4'd5, SHIFTR = 4'd6, JUMPTOIF = 4'd7;
     localparam LOGICAND = 4'd8, LOGICOR = 4'd9, EQUALS = 4'd10, NEQ = 4'd11;
