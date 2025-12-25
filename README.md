@@ -2,8 +2,6 @@
 
 This project implements a custom **4-bit Soft-Core CPU** on the Vicharak **Shrike Lite** board. 
 
-Originally designed by **Noah Gaertner** for SystemVerilog simulation, this core has been ported to the **Renesas SLG47910 FPGA** to work as a hardware accelerator for the RP2040.
-
 Instead of using physical buttons and LEDs, this CPU is controlled entirely via **SPI**. The RP2040 acts as the master, sending instructions, loading memory, and single-stepping the clock.
 
 ---
