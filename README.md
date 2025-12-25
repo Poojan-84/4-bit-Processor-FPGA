@@ -8,7 +8,7 @@ Instead of using physical buttons and LEDs, this CPU is controlled entirely via 
 
 ---
 
-## 🏗 System Architecture
+## System Architecture
 
 The system is a hybrid design:
 * **RP2040 (Master):** Handles the high-level logic, user interface (USB/WiFi), and controls the CPU execution.
@@ -24,7 +24,7 @@ The system is a hybrid design:
 
 ---
 
-## 🔌 The SPI Interface
+## The SPI Interface
 
 To interact with the CPU, the RP2040 sends **8-bit packets** over SPI. The FPGA replies simultaneously with the current CPU state.
 
@@ -51,7 +51,7 @@ To interact with the CPU, the RP2040 sends **8-bit packets** over SPI. The FPGA 
 
 ---
 
-## 📜 Instruction Set Architecture (ISA)
+## Instruction Set Architecture (ISA)
 
 The CPU supports 16 operations. These opcodes are stored in the **Program Memory**.
 
@@ -75,56 +75,3 @@ The CPU supports 16 operations. These opcodes are stored in the **Program Memory
 | `15`| **BITNOT** | Bitwise NOT (`~`) |
 
 ---
-
-## 🚀 How to Run
-
-### 1. Hardware Setup
-Flash the FPGA bitstream containing `top.v`, `cpu_core.v`, and `spi_target.v`.
-
-### 2. RP2040 Controller Code (Python Example)
-Use this logic in your MicroPython/C code to drive the CPU.
-
-```python
-import machine
-import time
-
-# SPI Setup (Adjust pins for Shrike Lite)
-spi = machine.SPI(0, baudrate=1000000, polarity=0, phase=0)
-cs = machine.Pin(17, machine.Pin.OUT)
-
-def send_packet(data, instr, reset, step):
-    # Construct the byte: [Data 4b] [Instr 2b] [Rst 1b] [Step 1b]
-    byte = (data << 4) | (instr << 2) | (reset << 1) | step
-    cs.value(0)
-    response = spi.read(1, byte)
-    cs.value(1)
-    
-    # Parse Response
-    val = response[0]
-    reg = val >> 4
-    pc = val & 0x0F
-    return reg, pc
-
-# --- Example Sequence: Add 2 + 3 ---
-
-# 1. Reset CPU
-send_packet(0, 0, 1, 0) 
-
-# 2. Load Program: "ADD 3" (Opcode 2) at Address 0
-# Opcode 2 (ADD) -> Data Payload = 2
-# Instruction 0 (LOADPROG) -> Instr = 0
-send_packet(2, 0, 0, 1) # Step to write
-
-# 3. Load Data: Value "3" at Address 0 (Since ADD uses Data[PC])
-# Value 3 -> Data Payload = 3
-# Instruction 1 (LOADDATA) -> Instr = 1
-send_packet(3, 1, 0, 1) # Step to write
-
-# 4. Set Register to 2 (Manually, or via LOAD command). 
-# Let's assume Reg starts at 0. We need to load 2 first. 
-# (Simplification: Just running the ADD instruction with Reg=0 will result in 0+3=3)
-
-# 5. Run Program
-# Instruction 3 (RUNPROG)
-reg, pc = send_packet(0, 3, 0, 1) # Execute Step 1
-print(f"Result: {reg}")
