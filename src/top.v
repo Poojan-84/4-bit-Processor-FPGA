@@ -15,7 +15,7 @@
     wire       spi_rx_valid;
     reg  [7:0] spi_tx_data;
 
-    // Instantiate existing SPI Target (Reuse your spi_target.v)
+    // Instantiate existing SPI Target
     spi_target #( .WIDTH(8) ) u_spi_target (
         .i_clk(clk),
         .i_rst_n(rst_n),
