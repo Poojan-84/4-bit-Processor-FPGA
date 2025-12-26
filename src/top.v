@@ -1,4 +1,6 @@
 (* top *) module top ( 
+    (* iopad_external_pin, clkbuf_inhibit *) input clk,
+    (* iopad_external_pin *) output clk_en,
     (* iopad_external_pin *) input  rst_n, 
 
     // SPI Interface
@@ -9,12 +11,7 @@
     (* iopad_external_pin *) output spi_miso_en
 );
 
-    wire clk;
-    OSC #(
-        .OSC_SEL(0) // 0 = 25MHz Internal Oscillator
-    ) u_osc (
-        .OSC_OUT(clk)
-    );
+    assign clk_en = 1'b1;
 
     // Wires for SPI Module
     wire [7:0] spi_rx_data;
