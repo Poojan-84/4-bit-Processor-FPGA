@@ -12,6 +12,8 @@ The system is a hybrid design:
 * **RP2040 (Master):** Handles the high-level logic, user interface, and controls the CPU execution.
 * **FPGA (Slave):** Contains the CPU core, memory (RAM/ROM), and ALU.
 
+<img width="2816" height="1536" alt="Vector-4 Schematic" src="https://github.com/user-attachments/assets/9bf91661-1c73-47e6-a27f-948a52907dcd" />
+
 ### Specifications
 | Feature | Detail |
 | :--- | :--- |
