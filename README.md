@@ -12,8 +12,6 @@ The system is a hybrid design:
 * **RP2040 (Master):** Handles the high-level logic, user interface, and controls the CPU execution.
 * **FPGA (Slave):** Contains the CPU core, memory (RAM/ROM), and ALU.
 
-<img width="2000" height="1091" alt="Vector-4 Schematic" src="https://github.com/user-attachments/assets/9bf91661-1c73-47e6-a27f-948a52907dcd" />
-
 ### Specifications
 | Feature | Detail |
 | :--- | :--- |
@@ -23,7 +21,8 @@ The system is a hybrid design:
 | **Interface** | 8-bit SPI Packet (Command + Payload) |
 
 ---
-
+<img width="2000" height="1091" alt="Vector-4 Schematic" src="https://github.com/user-attachments/assets/9bf91661-1c73-47e6-a27f-948a52907dcd" />
+---
 ## The SPI Interface
 
 To interact with the CPU, the RP2040 sends **8-bit packets** over SPI. The FPGA replies simultaneously with the current CPU state.
