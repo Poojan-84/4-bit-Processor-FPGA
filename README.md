@@ -1,4 +1,4 @@
-# 4-Bit CPU on Shrike Lite
+# Vector-4 A 4-Bit CPU
 
 This project implements a custom **4-bit Soft-Core CPU** on the Vicharak **Shrike Lite** board. 
 
