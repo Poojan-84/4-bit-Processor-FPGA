@@ -1,3 +1,5 @@
+// Custom Module
+
 module cpu_core (
     input  wire       clk,    // FPGA CLK input
     input  wire       rst_n,    // Active low reset
@@ -7,29 +9,26 @@ module cpu_core (
     input  wire [1:0] instruction,  //CPU Mode select
     /*
     00 = LOADPROG (Write to Program Memory)
-
     01 = LOADDATA (Write to Data Memory)
-
     10 = SETRUNPT (Set PC manually)
-
     11 = RUNPROG (Actually execute the code in memory)
     */
-    input  wire [3:0] data_in,   // 4-bit input from the RP2040 - can be opcode or data itself
-    input  wire       data_in_3_latched, // From top module logic - the state of input pin from the previous cycle
+    input  wire [3:0] data_in,   // 4-bit input from the RP2040
+    input  wire       data_in_3_latched, // From top module logic
 
     // Outputs to "io_out"
-    output reg  [3:0] pc,    //program counter - shows current program line being executed
-    output reg  [3:0] regval   //result value - the value of the answer after operations
+    output reg  [3:0] pc,    //program counter
+    output reg  [3:0] regval   //result value
 );
 
-    // Memory Arrays (16 x 4-bit) - 16 slot memory with each slot being 4 bit wide
-    reg [3:0] prog [0:15];    //Stores the instructions/code
-    reg [3:0] data [0:15];    //Stores the variables
+    // Memory Arrays (16 x 4-bit)
+    reg [3:0] prog [0:15];
+    reg [3:0] data [0:15];
     
     // Internal Signals
-    wire [3:0] progc;   // Current Prog
-    wire [3:0] datac;   // Current variable/operation
-    wire [3:0] npc;     // Next Program Counter (pc+1)
+    wire [3:0] progc;
+    wire [3:0] datac;
+    wire [3:0] npc;
     
     assign progc = prog[pc];
     assign datac = data[pc];
@@ -50,14 +49,12 @@ module cpu_core (
         if (!rst_n) begin
             pc <= 0;
             regval <= 0;
-            // Clear memories
             for (i=0; i<16; i=i+1) begin
                 prog[i] <= 4'd0;
                 data[i] <= 4'd0;
             end
         end 
         else if (i_step) begin
-            // EXECUTE ONE CYCLE
             case (instruction)
                 LOADPROG: begin 
                     prog[pc] <= data_in;
@@ -86,7 +83,6 @@ module cpu_core (
                              regval <= ((datac<4) ? regval>>datac : regval >> 3);
                         end
                         JUMPTOIF: begin
-                             // Use the latched version of input bit 7 (data_in[3])
                              pc <= (data_in_3_latched) ? datac : npc;
                         end
                         LOGICAND: begin regval <= regval && datac; pc <= npc; end
