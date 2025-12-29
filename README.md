@@ -93,7 +93,7 @@ These signals correspond to the top-level Verilog module (`top.v`).
 
 ### Pin Mapping Table
 
-| Signal Function | FPGA Pin (Shrike Lite) | RP2040 Pin | Direction |
+| Signal Function | FPGA Pin (GPIO) | RP2040 Pin | Direction |
 | :--- | :---: | :---: | :--- |
 | **SPI Clock** | 3 | 2 | RP2040 Output -> FPGA Input |
 | **Chip Select** | 4 | 1 | RP2040 Output -> FPGA Input |
