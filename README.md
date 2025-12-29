@@ -1,4 +1,4 @@
-# Vector-4 A 4-Bit CPU
+# Vector-4
 
 This project implements a custom **4-bit Soft-Core CPU** on the Vicharak **Shrike Lite** board. 
 
