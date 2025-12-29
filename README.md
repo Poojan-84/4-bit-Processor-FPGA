@@ -73,3 +73,32 @@ The CPU supports 16 operations. These opcodes are stored in the **Program Memory
 | `15`| **BITNOT** | Bitwise NOT (`~`) |
 
 ---
+
+## Hardware Connections
+
+This design was tested using the following connections between the Shrike Lite FPGA (Slave) and the RP2040 (Master).
+
+### Top Module Interface
+These signals correspond to the top-level Verilog module (`top.v`).
+
+| Signal        | Direction | Description                          |
+|---------------|-----------|--------------------------------------|
+| `clk`         | In        | System clock (50 MHz typical)        |
+| `clk_en`      | Out       | Clock enable (always 1)              |
+| `rst_n`       | In        | Reset Pin (active low)               |
+| `spi_ss_n`    | In        | Input target select signal (active low) |
+| `spi_sck`     | In        | Input SPI clock signal               |
+| `spi_mosi`    | In        | Input from controller (Master Out)   |
+| `spi_miso`    | Out       | Output to controller (Master In)     |
+
+### Pin Mapping Table
+
+| Signal Function | FPGA Pin (Shrike Lite) | RP2040 Pin | Direction |
+| :--- | :---: | :---: | :--- |
+| **SPI Clock** | 3 | 2 | RP2040 Output -> FPGA Input |
+| **Chip Select** | 4 | 1 | RP2040 Output -> FPGA Input |
+| **MOSI** | 5 | 3 | RP2040 Output -> FPGA Input |
+| **MISO** | 6 | 0 | FPGA Output -> RP2040 Input |
+| **Reset** | 18 | 14 | RP2040 Output -> FPGA Input |
+
+> **Note:** The pin numbers in your FPGA constraint file (`.cst` or `.pcf`) must match the **FPGA Pin** column, and the pin numbers in your MicroPython script must match the **RP2040 Pin** column.
